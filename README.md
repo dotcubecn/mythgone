@@ -7,7 +7,7 @@
   <img alt="徽章: GPL 3.0 许可证" src="https://img.shields.io/github/license/dotcubecn/mythgone?style=flat-square">
   <img alt="徽章: 最后提交时间" src="https://img.shields.io/github/last-commit/dotcubecn/mythgone?style=flat-square">
   <img alt="徽章: 议题数" src="https://img.shields.io/github/issues/dotcubecn/mythgone?style=flat-square">
-  <img alt="徽章: GitHub 星标数" src="https://img.shields.io/github/stars/dotcubecn/mythgone?style=flat-square&label=GitHub%20stars">
+  <img alt="徽章: 星标数" src="https://img.shields.io/github/stars/dotcubecn/mythgone?style=flat-square">
   <img alt="徽章: 项目大小" src="https://img.shields.io/github/repo-size/dotcubecn/mythgone?style=flat-square&label=size">
 </div>
 
