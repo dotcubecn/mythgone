@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="#"><img src="docs/mythgone128.png" alt="Mythgone 图标" width="128" height="128"></a>
+  <a href="#"><img src="docs/mythgone256.png" alt="Mythgone 图标" width="128" height="128"></a>
   <br><sub>图标基于 <a href="https://egonelbre.com/">Egon Elbre</a> 的 Go gopher 形象创作, 其中引用的极域电子教室图标, 其版权与商标权归南京极域信息科技有限公司所有.</sub>
   <h3 align="center">Mythgone</h3>
   <p>适用于 Windows 的简洁极域电子教室反控软件, 使用 Go 编写.</p>
