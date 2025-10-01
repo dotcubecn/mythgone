@@ -36,4 +36,4 @@
 [![爱发电赞助](https://img.shields.io/badge/爱发电-赞助开发者-946ce6?style=for-the-badge)](https://ifdian.net/order/create?user_id=1c339020ef8111ec9f4752540025c377)
 [![雨云推广](https://img.shields.io/badge/雨云-优惠注册-37b5c1?style=for-the-badge)](https://www.rainyun.com/dotcube_?s=gh-mythgone-readme)
 
-![赞助二维码](docs/sponsor.png "赞助二维码")
+![赞助二维码](docs/sponsor.webp "赞助二维码")
