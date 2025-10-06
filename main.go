@@ -695,7 +695,7 @@ func main() {
 						},
 					},
 					GroupBox{
-						Title:  "解锁控制",
+						Title:  "解锁控制 (实验)",
 						Layout: VBox{Margins: Margins{Left: 10, Top: 12, Right: 10, Bottom: 12}, Spacing: 12},
 						Children: []Widget{
 							CheckBox{

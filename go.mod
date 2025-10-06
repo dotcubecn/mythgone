@@ -3,6 +3,7 @@ module github.com/dotcubecn/mythgone
 go 1.25.1
 
 require github.com/tailscale/walk v0.0.0-20250702155327-6376defdac3f
+
 require github.com/tailscale/win v0.0.0-20250213223159-5992cb43ca35
 
 require (
