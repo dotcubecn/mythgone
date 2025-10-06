@@ -13,19 +13,19 @@
 
 ---
 
-<!-- ## 兼容性
+## 兼容性
 本软件在如下环境中经测试可正常运行.  
-| **操作系统** | **架构** | **极域版本** |
-| :--- | :--- | :--- |
-| Windows 7 旗舰版 SP1 | x86 | v4.2 2015 专业版 |
-| Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2016 豪华版 |
-| Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2021 豪华版 | -->
+| **操作系统** | **架构** | **极域版本** | **备注** |
+| :--- | :--- | :--- | :--- |
+| Windows 7 旗舰版 SP1 | x86 | v4.2 2015 专业版 | 部分功能受限 |
+| Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2016 豪华版 |  |
+| Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2021 豪华版 |  |
 
 
 ## 依赖与致谢
 - [@数码小-a](https://space.bilibili.com/3546704078964833 "数码小-a的哔哩哔哩主页") - 提供了用于测试的极域样本.
 - [thongtech/go-legacy-win7](https://github.com/thongtech/go-legacy-win7 "go-legacy-win7 的 GitHub 仓库") - 使 Go 语言支持旧版本 Windows.  
-- [lxn/walk](https://github.com/lxn/walk "walk 的 GitHub 仓库") - 用于创建 Windows GUI.  
+- [lxn/walk](https://github.com/tailscale/walk "tailscale 在 GitHub 上的 walk 分支 ") - 用于创建 Windows GUI.  
 
 
 ## 赞助
