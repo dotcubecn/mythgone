@@ -25,7 +25,7 @@
 ## 依赖与致谢
 - [@数码小-a](https://space.bilibili.com/3546704078964833 "数码小-a的哔哩哔哩主页") - 提供了用于测试的极域样本.
 - [thongtech/go-legacy-win7](https://github.com/thongtech/go-legacy-win7 "go-legacy-win7 的 GitHub 仓库") - 使 Go 语言支持旧版本 Windows.  
-- [lxn/walk](https://github.com/tailscale/walk "tailscale 在 GitHub 上的 walk 分支 ") - 用于创建 Windows GUI.  
+- [tailscale/walk](https://github.com/tailscale/walk "tailscale 在 GitHub 上的 walk 分支 ") - 用于创建 Windows GUI.  
 
 
 ## 赞助
