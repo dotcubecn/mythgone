@@ -46,6 +46,7 @@
 > [!CAUTION]  
 > **请在个人经济条件允许的情况下赞助, 未成年人请在监护人同意后赞助. 请勿支出超出自身承受能力的费用.**
 
+[![硅基流动推广](https://img.shields.io/badge/SiliconFlow-免费额度-9354ff?style=for-the-badge)](https://cloud.siliconflow.cn/i/qqpGopO3)
 [![爱发电赞助](https://img.shields.io/badge/爱发电-赞助开发者-946ce6?style=for-the-badge)](https://ifdian.net/order/create?user_id=1c339020ef8111ec9f4752540025c377)
 [![雨云推广](https://img.shields.io/badge/雨云-优惠注册-37b5c1?style=for-the-badge)](https://www.rainyun.com/dotcube_?s=gh-mythgone-readme)
 
