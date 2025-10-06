@@ -4,6 +4,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 	"syscall"
 	"time"
 	"unsafe"
@@ -68,14 +69,6 @@ var (
 	procUnhookWindowsHookEx      = user32DLL.NewProc("UnhookWindowsHookEx")
 	procClipCursor               = user32DLL.NewProc("ClipCursor")
 
-	// Kernel32.dll
-	kernel32DLL         = syscall.NewLazyDLL("kernel32.dll")
-	procCreateFile      = kernel32DLL.NewProc("CreateFileW")
-	procDeviceIoControl = kernel32DLL.NewProc("DeviceIoControl")
-	procCloseHandle     = kernel32DLL.NewProc("CloseHandle")
-	procCreateThread    = kernel32DLL.NewProc("CreateThread")
-	procTerminateThread = kernel32DLL.NewProc("TerminateThread")
-
 	// 广播窗口相关变量
 	originalBroadcastWindowProc uintptr
 	broadcastHookEnabled        bool
@@ -108,6 +101,10 @@ var (
 	keyboardUnlockCheckbox      *walk.CheckBox
 	broadcastButton             *walk.PushButton
 	githubLink                  *walk.LinkLabel
+	mythwareStatusLabel         *walk.TextLabel
+	mythwarePidLabel            *walk.TextLabel
+	killMythwareButton          *walk.PushButton
+	suspendMythwareButton       *walk.PushButton
 )
 
 // 窗口显示亲和性设置
@@ -311,7 +308,7 @@ func SetBroadcastWindowHook(windowHandle syscall.Handle) bool {
 	return ret != 0
 }
 
-// Windows事件钩子
+// Windows 事件钩子
 func winEventHook(hWinEventHook syscall.Handle, event uint32, hwnd syscall.Handle, idObject, idChild int32, dwEventThread, dwmsEventTime uint32) uintptr {
 	if broadcastHookEnabled && hwnd == broadcastWindowHandle {
 		SetWindowBottom(hwnd)
@@ -382,7 +379,7 @@ func MouseHookThread() uintptr {
 		case <-mouseHookQuit:
 			return 0
 		default:
-			// 设置低级鼠标钩子
+			// 低级鼠标钩子
 			hook, _, _ := procSetWindowsHookEx.Call(
 				WH_MOUSE_LL,
 				syscall.NewCallback(HookProc),
@@ -588,17 +585,17 @@ func main() {
 			}
 			return icon
 		}(),
-		Size:            Size{Width: 500, Height: 300},
+		Size:            Size{Width: 500, Height: 320},
 		DisableMaximize: true,
 		DisableResizing: true,
-		Layout:          VBox{Margins: Margins{Left: 15, Top: 15, Right: 15, Bottom: 15}, Spacing: 15},
+		Layout:          VBox{Margins: Margins{Left: 12, Top: 12, Right: 12, Bottom: 12}, Spacing: 10},
 		Children: []Widget{
 			Composite{
 				Layout: Grid{Columns: 2, Spacing: 10},
 				Children: []Widget{
 					GroupBox{
 						Title:  "窗口控制",
-						Layout: VBox{Margins: Margins{Left: 10, Top: 12, Right: 10, Bottom: 12}, Spacing: 12},
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 10},
 						Children: []Widget{
 							CheckBox{
 								AssignTo: &preventCaptureCheckbox,
@@ -633,9 +630,10 @@ func main() {
 							},
 						},
 					},
+
 					GroupBox{
 						Title:  "广播控制",
-						Layout: VBox{Margins: Margins{Left: 10, Top: 12, Right: 10, Bottom: 12}, Spacing: 12},
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 10},
 						Children: []Widget{
 							CheckBox{
 								AssignTo: &bottomBroadcastCheckbox,
@@ -658,16 +656,17 @@ func main() {
 							PushButton{
 								AssignTo: &broadcastButton,
 								Text:     "切换窗口模式",
-								MinSize:  Size{Width: 40, Height: 32},
+								MinSize:  Size{Width: 0, Height: 32},
 								OnClicked: func() {
 									ToggleBroadcastWindow(mainWindow)
 								},
 							},
 						},
 					},
+
 					GroupBox{
 						Title:  "黑屏控制",
-						Layout: VBox{Margins: Margins{Left: 10, Top: 12, Right: 10, Bottom: 12}},
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}},
 						Children: []Widget{
 							CheckBox{
 								AssignTo: &blackScreenMinimizeCheckbox,
@@ -694,9 +693,10 @@ func main() {
 							},
 						},
 					},
+
 					GroupBox{
 						Title:  "解锁控制 (实验)",
-						Layout: VBox{Margins: Margins{Left: 10, Top: 12, Right: 10, Bottom: 12}, Spacing: 12},
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 10},
 						Children: []Widget{
 							CheckBox{
 								AssignTo: &mouseUnlockCheckbox,
@@ -731,7 +731,65 @@ func main() {
 				},
 			},
 
+			GroupBox{
+				Title:  "进程控制",
+				Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 8},
+				Children: []Widget{
+					Composite{
+						Layout: HBox{},
+						Children: []Widget{
+							TextLabel{
+								AssignTo: &mythwareStatusLabel,
+								Text:     "极域状态: 未知",
+							},
+							HSpacer{},
+							TextLabel{
+								AssignTo: &mythwarePidLabel,
+								Text:     "PID: 未知",
+							},
+						},
+					},
+					Composite{
+						Layout: HBox{Spacing: 10},
+						Children: []Widget{
+							HSpacer{},
+							PushButton{
+								AssignTo: &killMythwareButton,
+								Text:     "结束极域",
+								MinSize:  Size{Width: 100, Height: 30},
+								Enabled:  false,
+								OnClicked: func() {
+									if IsMythwareRunning() {
+										KillMythwareProcess()
+										UpdateMythwareStatus()
+									} else {
+										StartMythwareProcess()
+										UpdateMythwareStatus()
+									}
+								},
+							},
+							PushButton{
+								AssignTo: &suspendMythwareButton,
+								Text:     "暂停极域",
+								MinSize:  Size{Width: 100, Height: 30},
+								OnClicked: func() {
+									if IsMythwareRunning() && !IsMythwareSuspended() {
+										SuspendMythwareProcess()
+									} else if IsMythwareSuspended() {
+										ResumeMythwareProcess()
+									}
+									UpdateMythwareStatus()
+								},
+							},
+							HSpacer{},
+						},
+					},
+				},
+			},
+
 			VSpacer{},
+
+			// 底部链接
 			Composite{
 				Layout: HBox{},
 				Children: []Widget{
@@ -776,6 +834,24 @@ func main() {
 		}
 	}()
 
+	// 进程状态更新循环
+	go func() {
+		ticker := time.NewTicker(2 * time.Second)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				if mainWindow != nil {
+					UpdateMythwareStatus()
+				}
+			case <-quitChannel:
+				return
+			}
+		}
+	}()
+	UpdateMythwareStatus()
+
 	// 窗口关闭事件处理
 	mainWindow.Closing().Attach(func(canceled *bool, reason walk.CloseReason) {
 		broadcastHookEnabled = false
@@ -798,6 +874,41 @@ func main() {
 	})
 
 	application.Run()
+}
+
+// 更新状态显示
+// 更新状态显示
+func UpdateMythwareStatus() {
+	if mythwareStatusLabel == nil || mythwarePidLabel == nil || killMythwareButton == nil || suspendMythwareButton == nil {
+		return
+	}
+
+	pid, state := GetMythwareProcessState()
+
+	// 更新状态文本
+	switch state {
+	case -1:
+		mythwareStatusLabel.SetText("极域状态: 未运行")
+		mythwarePidLabel.SetText("PID: 无")
+		killMythwareButton.SetText("启动极域")
+		killMythwareButton.SetEnabled(true)
+		suspendMythwareButton.SetText("暂停极域")
+		suspendMythwareButton.SetEnabled(false)
+	case 0:
+		mythwareStatusLabel.SetText("极域状态: 运行中")
+		mythwarePidLabel.SetText("PID: " + strconv.Itoa(int(pid)))
+		killMythwareButton.SetText("结束极域")
+		killMythwareButton.SetEnabled(true)
+		suspendMythwareButton.SetText("暂停极域")
+		suspendMythwareButton.SetEnabled(true)
+	case 1:
+		mythwareStatusLabel.SetText("极域状态: 已暂停")
+		mythwarePidLabel.SetText("PID: " + strconv.Itoa(int(pid)))
+		killMythwareButton.SetText("结束极域")
+		killMythwareButton.SetEnabled(false)
+		suspendMythwareButton.SetText("恢复极域")
+		suspendMythwareButton.SetEnabled(true)
+	}
 }
 
 // 监控广播窗口
