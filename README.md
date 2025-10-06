@@ -22,11 +22,19 @@
 | Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2021 豪华版 |  |
 
 
-## 依赖与致谢
+## 致谢
+### 鸣谢
 - [@数码小-a](https://space.bilibili.com/3546704078964833 "数码小-a的哔哩哔哩主页") - 提供了用于测试的极域样本.
+
+### 第三方库
 - [thongtech/go-legacy-win7](https://github.com/thongtech/go-legacy-win7 "go-legacy-win7 的 GitHub 仓库") - 使 Go 语言支持旧版本 Windows.  
 - [tailscale/walk](https://github.com/tailscale/walk "tailscale 在 GitHub 上的 walk 分支 ") - 用于创建 Windows GUI.  
 
+### 参考
+- [极域电子教室完全分 (附绕过方法和软件)](https://www.52pojie.cn/thread-542884-1-1.html "极域电子教室完全分析（附绕过方法和软件） - 吾爱破解 - 52pojie.cn")
+- [对极域64位禁止终止进程、键盘锁定的分析](https://blog.csdn.net/weixin_42112038/article/details/126228989 "对极域64位禁止终止进程、键盘锁定的分析_请求的控件对此服务无效-CSDN博客")
+- [Windows API 让窗口在截屏 (极域监控) 时变透明 窗口防截屏 让老师祖传十年的极域瞎掉](https://www.cnblogs.com/petyr/articles/19001342 "Windows API 让窗口在截屏（极域监控）时变透明 窗口防截屏 让老师祖传十年的极域瞎掉 - Petyrma - 博客园")
+- [win32 判断进程状态 (挂起/运行中), 用API挂起/恢复进程](https://blog.csdn.net/weixin_42112038/article/details/126243863 "win32 判断进程状态（挂起/运行中）、用API挂起/恢复进程_判断一个进程是否处于挂起状态-CSDN博客")
 
 ## 赞助
 如果本软件对你有帮助, 你可以考虑赞助我.  
