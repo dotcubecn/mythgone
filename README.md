@@ -21,6 +21,11 @@
 | Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2016 豪华版 |  |
 | Windows 10 IoT 企业版 LTSC 2021 | x64 | v6.0 2021 豪华版 |  |
 
+## 文档
+> [!WARNING]  
+> 文档内容由 AI 生成, 可能存在描述不准确或更新延迟的情况, 请以项目实际代码为准.
+- [中文文档 (Zread)](https://zread.ai/dotcubecn/mythgone)
+- [英文文档 (DeepWiki)](https://deepwiki.com/dotcubecn/mythgone)
 
 ## 致谢
 ### 鸣谢
@@ -38,7 +43,7 @@
 
 ## 赞助
 如果本软件对你有帮助, 你可以考虑赞助我.  
-> [!CAUTION]
+> [!CAUTION]  
 > **请在个人经济条件允许的情况下赞助, 未成年人请在监护人同意后赞助. 请勿支出超出自身承受能力的费用.**
 
 [![爱发电赞助](https://img.shields.io/badge/爱发电-赞助开发者-946ce6?style=for-the-badge)](https://ifdian.net/order/create?user_id=1c339020ef8111ec9f4752540025c377)
