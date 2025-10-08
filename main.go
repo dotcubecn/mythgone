@@ -12,6 +12,7 @@ import (
 	"github.com/tailscale/walk"
 	. "github.com/tailscale/walk/declarative"
 	"github.com/tailscale/win"
+	"golang.org/x/sys/windows"
 )
 
 const (
@@ -48,6 +49,8 @@ const (
 )
 
 var (
+	mutexHandle windows.Handle
+
 	// User32.dll
 	user32DLL                    = syscall.NewLazyDLL("user32.dll")
 	procSetWindowDisplayAffinity = user32DLL.NewProc("SetWindowDisplayAffinity")
@@ -105,6 +108,8 @@ var (
 	mythwarePidLabel            *walk.TextLabel
 	killMythwareButton          *walk.PushButton
 	suspendMythwareButton       *walk.PushButton
+	antiControlButton           *walk.PushButton
+	controlWindow               *walk.Dialog
 )
 
 // 窗口显示亲和性设置
@@ -411,7 +416,7 @@ func KeyboardHookThread() uintptr {
 		case <-keyboardHookQuit:
 			return 0
 		default:
-			// 设置多个键盘钩子确保覆盖
+			// 多个键盘钩子
 			hook1, _, _ := procSetWindowsHookEx.Call(
 				WH_KEYBOARD_LL,
 				syscall.NewCallback(HookProc),
@@ -549,7 +554,7 @@ func StopKeyboardUnlock() {
 	}
 }
 
-// 打开URL链接
+// 打开 URL 链接
 func OpenURL(url string) {
 	shell32 := syscall.NewLazyDLL("shell32.dll")
 	procShellExecute := shell32.NewProc("ShellExecuteW")
@@ -564,6 +569,13 @@ func OpenURL(url string) {
 }
 
 func main() {
+	mutexName, _ := windows.UTF16PtrFromString("{68cfec0b-2492-5932-130d-f458f2aaefae}")
+	handle, err := windows.CreateMutex(nil, false, mutexName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	mutexHandle = handle
+	defer windows.CloseHandle(mutexHandle)
 	application, err := walk.InitApp()
 	if err != nil {
 		log.Fatal(err)
@@ -585,14 +597,15 @@ func main() {
 			}
 			return icon
 		}(),
-		Size:            Size{Width: 500, Height: 320},
+		Size:            Size{Width: 450, Height: 250},
 		DisableMaximize: true,
 		DisableResizing: true,
 		Layout:          VBox{Margins: Margins{Left: 12, Top: 12, Right: 12, Bottom: 12}, Spacing: 10},
 		Children: []Widget{
 			Composite{
-				Layout: Grid{Columns: 2, Spacing: 10},
+				Layout: Grid{Columns: 3, Spacing: 10},
 				Children: []Widget{
+
 					GroupBox{
 						Title:  "窗口控制",
 						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 10},
@@ -610,6 +623,7 @@ func main() {
 									} else {
 										SetWindowDisplayAffinity(syscall.Handle(mainWindow.Handle()), WindowDisplayAffinityNone)
 									}
+									UpdateControlWindowCaptureState(preventCaptureCheckbox.Checked())
 								},
 							},
 							CheckBox{
@@ -626,6 +640,7 @@ func main() {
 											mainWindow.Activate()
 										}
 									}
+									UpdateControlWindowCaptureState(preventCaptureCheckbox.Checked())
 								},
 							},
 						},
@@ -665,36 +680,6 @@ func main() {
 					},
 
 					GroupBox{
-						Title:  "黑屏控制",
-						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}},
-						Children: []Widget{
-							CheckBox{
-								AssignTo: &blackScreenMinimizeCheckbox,
-								Text:     "隐藏黑屏",
-								Checked:  false,
-								OnCheckedChanged: func() {
-									if blackScreenMinimizeCheckbox.Checked() {
-										blackScreenMinimizeEnabled = true
-										go monitorBlackScreenWindow(blackScreenQuitChannel)
-									} else {
-										blackScreenMinimizeEnabled = false
-										if embeddedBlackScreenWindow != 0 {
-											SetParent(embeddedBlackScreenWindow, 0)
-											embeddedBlackScreenWindow = 0
-										}
-										if blackScreenParentWindow != 0 {
-											DestroyWindow(blackScreenParentWindow)
-											blackScreenParentWindow = 0
-										}
-										close(blackScreenQuitChannel)
-										blackScreenQuitChannel = make(chan struct{})
-									}
-								},
-							},
-						},
-					},
-
-					GroupBox{
 						Title:  "解锁控制 (实验)",
 						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 10},
 						Children: []Widget{
@@ -728,11 +713,61 @@ func main() {
 							},
 						},
 					},
+
+					GroupBox{
+						Title:  "黑屏控制",
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}},
+						Children: []Widget{
+							CheckBox{
+								AssignTo: &blackScreenMinimizeCheckbox,
+								Text:     "隐藏黑屏",
+								Checked:  false,
+								OnCheckedChanged: func() {
+									if blackScreenMinimizeCheckbox.Checked() {
+										blackScreenMinimizeEnabled = true
+										go monitorBlackScreenWindow(blackScreenQuitChannel)
+									} else {
+										blackScreenMinimizeEnabled = false
+										if embeddedBlackScreenWindow != 0 {
+											SetParent(embeddedBlackScreenWindow, 0)
+											embeddedBlackScreenWindow = 0
+										}
+										if blackScreenParentWindow != 0 {
+											DestroyWindow(blackScreenParentWindow)
+											blackScreenParentWindow = 0
+										}
+										close(blackScreenQuitChannel)
+										blackScreenQuitChannel = make(chan struct{})
+									}
+								},
+							},
+						},
+					},
+
+					GroupBox{
+						Title:  "极域反控",
+						Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}},
+						Children: []Widget{
+							PushButton{
+								AssignTo: &antiControlButton,
+								Text:     "启动反控",
+								MinSize:  Size{Width: 0, Height: 40},
+								OnClicked: func() {
+									// 创建反控窗口
+									CreateControlWindow()
+								},
+							},
+						},
+					},
+
+					Composite{
+						Layout: VBox{},
+					},
 				},
 			},
 
 			GroupBox{
-				Title:  "进程控制",
+				Title:  "进程控制 (实验)",
 				Layout: VBox{Margins: Margins{Left: 8, Top: 10, Right: 8, Bottom: 10}, Spacing: 8},
 				Children: []Widget{
 					Composite{
@@ -796,7 +831,7 @@ func main() {
 					HSpacer{},
 					LinkLabel{
 						AssignTo: &githubLink,
-						Text:     `由 dotcubecn 与所有贡献者开发 (<a href="https://github.com/dotcubecn/mythgone">GitHub</a>)`,
+						Text:     `由 dotcubecn 与所有贡献者开发 (<a href="https://github.com/dotcubecn/mythgone  ">GitHub</a>)`,
 						OnLinkActivated: func(link *walk.LinkLabelLink) {
 							OpenURL(link.URL())
 						},
@@ -870,13 +905,11 @@ func main() {
 		close(quitChannel)
 		close(broadcastQuitChannel)
 		close(blackScreenQuitChannel)
-		syscall.Exit(0)
 	})
-
+	defer windows.CloseHandle(mutexHandle)
 	application.Run()
 }
 
-// 更新状态显示
 // 更新状态显示
 func UpdateMythwareStatus() {
 	if mythwareStatusLabel == nil || mythwarePidLabel == nil || killMythwareButton == nil || suspendMythwareButton == nil {

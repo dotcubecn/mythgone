@@ -301,7 +301,12 @@ func GetMythwareInstallPath() (string, error) {
 		`SOFTWARE\WOW6432Node\TopDomain\e-Learning Class Standard\1.00`,
 		registry.READ)
 	if err != nil {
-		return "", err
+		key, err = registry.OpenKey(registry.LOCAL_MACHINE,
+			`SOFTWARE\TopDomain\e-Learning Class Standard\1.00`,
+			registry.READ)
+		if err != nil {
+			return "", err
+		}
 	}
 	defer key.Close()
 
