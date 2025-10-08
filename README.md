@@ -40,6 +40,7 @@
 - [对极域64位禁止终止进程、键盘锁定的分析](https://blog.csdn.net/weixin_42112038/article/details/126228989 "对极域64位禁止终止进程、键盘锁定的分析_请求的控件对此服务无效-CSDN博客")
 - [Windows API 让窗口在截屏 (极域监控) 时变透明 窗口防截屏 让老师祖传十年的极域瞎掉](https://www.cnblogs.com/petyr/articles/19001342 "Windows API 让窗口在截屏（极域监控）时变透明 窗口防截屏 让老师祖传十年的极域瞎掉 - Petyrma - 博客园")
 - [win32 判断进程状态 (挂起/运行中), 用API挂起/恢复进程](https://blog.csdn.net/weixin_42112038/article/details/126243863 "win32 判断进程状态（挂起/运行中）、用API挂起/恢复进程_判断一个进程是否处于挂起状态-CSDN博客")
+- [极域电子教室 v6.0 部分 UDP 数据包分析](https://gist.github.com/dotcubecn/57bdd9578f105f20009cc6fd2b64f4da "极域 v6.0 部分 UDP 数据包分析")
 
 ## 赞助
 如果本软件对你有帮助, 你可以考虑赞助我.  
