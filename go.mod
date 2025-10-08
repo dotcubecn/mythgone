@@ -6,6 +6,7 @@ require github.com/tailscale/walk v0.0.0-20250702155327-6376defdac3f
 
 require (
 	github.com/tailscale/win v0.0.0-20250213223159-5992cb43ca35
+	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 	golang.org/x/sys v0.36.0
 )
 
