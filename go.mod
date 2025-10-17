@@ -2,18 +2,18 @@ module github.com/dotcubecn/mythgone
 
 go 1.25.1
 
-require github.com/tailscale/walk v0.0.0-20250702155327-6376defdac3f
+require github.com/tailscale/walk v0.0.0-20251016200523-963e260a8227
 
 require (
-	github.com/tailscale/win v0.0.0-20250213223159-5992cb43ca35
-	golang.org/x/net v0.38.0
-	golang.org/x/sys v0.36.0
+	github.com/tailscale/win v0.0.0-20250627215312-f4da2b8ee071
+	golang.org/x/net v0.46.0
+	golang.org/x/sys v0.37.0
 )
 
 require (
-	github.com/dblohm7/wingoes v0.0.0-20231019175336-f6e33aa7cc34 // indirect
-	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53 // indirect
+	github.com/dblohm7/wingoes v0.0.0-20250822163801-6d8e6105c62d // indirect
+	golang.org/x/exp v0.0.0-20251009144603-d2f985daa21b // indirect
 	gopkg.in/Knetic/govaluate.v3 v3.0.0 // indirect
 )
 
-replace github.com/tailscale/walk v0.0.0-20250702155327-6376defdac3f => github.com/dotcubecn/tailscale-walk-toolbar-fix v0.0.0-20251005105426-ed4f3f0af2f9
+replace github.com/tailscale/walk v0.0.0-20251016200523-963e260a8227 => github.com/dotcubecn/tailscale-walk-toolbar-fix v0.0.0-20251017110751-499fd12bf88e
